@@ -13,8 +13,14 @@ const contactRoutes = require('./routes/contact.routes');
 const app = express();
 connectDB(); // Connect to MongoDB
 // ── Middleware ─────────────────────────────────────────────────
-// Allow React (port 3001) to call this server
-app.use(cors({ origin: 'http://localhost:3001', credentials: true }));
+// Allow React and your deployed Vercel frontend to call this server
+app.use(cors({
+  origin: [
+    'http://localhost:3001',
+    'https://thefolio.vercel.app', // ← your Vercel URL (update after deployment)
+  ],
+  credentials: true,
+}));
 // Parse incoming JSON request bodies
 app.use(express.json());
 // Serve uploaded image files as public URLs
@@ -29,5 +35,5 @@ app.use('/api/admin', adminRoutes);
 // ── Start Server ──────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
