@@ -12,6 +12,7 @@ const PostPage = () => {
   const [commentBody, setCommentBody] = useState('');
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
   // 1. Fetch Post and Comments on Load
   useEffect(() => {
@@ -90,7 +91,7 @@ const PostPage = () => {
           {/* Cover Image */}
           {post.image && (
             <img 
-              src={`http://localhost:5000/uploads/${post.image}`} 
+              src={`${backendUrl}/uploads/${post.image}`} 
               alt="hero" 
               style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }} 
             />

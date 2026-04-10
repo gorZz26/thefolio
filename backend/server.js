@@ -16,8 +16,8 @@ connectDB(); // Connect to MongoDB
 // Allow React and your deployed Vercel frontend to call this server
 app.use(cors({
   origin: [
-    'http://localhost:3001',
-    'https://thefolio.vercel.app', // ← your Vercel URL (update after deployment)
+    'http://localhost:3000',
+    'https://thefolio-git-main-gorzz26s-projects.vercel.app',
   ],
   credentials: true,
 }));

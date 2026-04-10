@@ -12,6 +12,7 @@ const ProfilePage = () => {
   const [curPw, setCurPw] = useState('');
   const [newPw, setNewPw] = useState('');
   const [msg, setMsg] = useState('');
+  const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
   
   // NEW: State for user's posts
   const [myPosts, setMyPosts] = useState([]);
@@ -68,7 +69,7 @@ const ProfilePage = () => {
   };
 
   const picSrc = user?.profilePic
-    ? `http://localhost:5000/uploads/${user.profilePic}`
+    ? `${backendUrl}/uploads/${user.profilePic}`
     : '/default-avatar.png';
 
   return (

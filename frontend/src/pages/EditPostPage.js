@@ -12,6 +12,7 @@ const EditPostPage = () => {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
   // 1. Fetch the existing post data to pre-fill the form
   useEffect(() => {
@@ -20,7 +21,7 @@ const EditPostPage = () => {
         const { data } = await API.get(`/posts/${id}`);
         setTitle(data.title);
         setBody(data.body);
-        if (data.image) setPreview(`http://localhost:5000/uploads/${data.image}`);
+        if (data.image) setPreview(`${backendUrl}/uploads/${data.image}`);
       } catch (err) {
         setError('Failed to load post data.');
       } finally {

@@ -19,6 +19,7 @@ function HomePage() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
+  const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
   // 1. Hero Slider Logic
   useEffect(() => {
@@ -98,7 +99,7 @@ function HomePage() {
                     <div style={{ height: '190px', overflow: 'hidden' }}>
                       {post.image ? (
                         <img
-                          src={`http://localhost:5000/uploads/${post.image}`}
+                          src={`${backendUrl}/uploads/${post.image}`}
                           alt={post.title}
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
@@ -143,7 +144,7 @@ function HomePage() {
                     <div style={{ minWidth: '140px', height: '140px', borderRadius: '18px', overflow: 'hidden', background: '#fce4ec', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {post.image ? (
                         <img
-                          src={`http://localhost:5000/uploads/${post.image}`}
+                          src={`${backendUrl}/uploads/${post.image}`}
                           alt={post.title}
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
