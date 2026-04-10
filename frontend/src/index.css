@@ -1,0 +1,1248 @@
+/* src/index.css */
+
+:root {
+  /* Light Mode (Default) */
+  --lavender: #CDB4DA;
+  --pink: #FFAFCC;
+  --blue: #A2D2FF;
+  --text-main: #444444;
+  --bg-main: linear-gradient(135deg, #BEE0FE, #FFC8DC, #CDB4DA);
+  --card-bg: #ffffff;
+}
+
+/* Dark Mode - Triggered by the [data-theme] attribute */
+[data-theme='dark'] {
+  --lavender: #3d2b45; 
+  --pink: #703d4a;     
+  --blue: #1b262c;     
+  --text-main: #e0e0e0;     
+  --bg-main: #121212; 
+  --card-bg: #1e1e1e;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-main) !important;
+  color: var(--text-main) !important;
+  transition: background 0.4s ease, color 0.4s ease; /* Smooth fade */
+  min-height: 100vh;
+}
+
+/* Force all your existing containers to use these theme variables */
+.google-form-wrapper, 
+.top3-item, 
+.highlight-card, 
+.profile-card,
+.selection-card,
+.active-zone,
+form {
+  background: var(--card-bg) !important;
+  color: var(--text-main) !important;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+/* THIS pushes the footer down */
+main{
+  flex:1;
+}
+
+
+
+img{max-width:100%;display:block;border-radius:14px;}
+
+
+/* HEADER */
+header{
+background:linear-gradient(135deg,var(--lavender),var(--pink));
+}
+.header-inner{
+max-width:var(--max);
+margin:auto;
+padding:1rem 2rem;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+.logo{height:60px;}
+.brand{display:flex;align-items:center;gap:.6rem;}
+.brand-text{color:#fff;font-weight:700;font-size:1.2rem;letter-spacing:.5px;}
+nav ul{list-style:none;display:flex;gap:1.5rem;}
+nav a{text-decoration:none;color:#fff;font-weight:bold;}
+.active{border-bottom:2px solid #fff;}
+
+nav a{
+  position:relative;
+  text-decoration:none;
+  color:#fff;                 /* ALWAYS readable */
+  font-weight:bold;
+  padding:.55rem 1.1rem;
+  border-radius:16px;
+  transition:.3s ease;
+  z-index:1;
+}
+
+/* GLASS BACKGROUND LAYER */
+nav a::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:16px;
+  background:linear-gradient(135deg,var(--lavender),var(--pink));
+  opacity:0;
+  z-index:-1;
+
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+
+  transition:.3s ease;
+}
+
+/* HOVER */
+nav a:hover::before{
+  opacity:.25;                 /* glass strength */
+}
+
+nav a:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 24px rgba(0,0,0,0.18);
+}
+
+/* ACTIVE PAGE */
+nav a.active::before{
+  opacity:.35;                 /* stronger glass */
+}
+
+nav a.active{
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.22),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+}
+
+/* REMOVE OLD ACTIVE RULE */
+.active{
+  border-bottom:none;
+}
+
+
+/* LAYOUT */
+main section{padding:3rem 4%;width:100%;}
+.section-inner{max-width:var(--max);margin:auto;}
+
+
+.hero{
+background:rgba(255,255,255,.4);
+backdrop-filter:blur(10px);
+}
+.hero-inner{
+max-width:var(--max);
+margin:auto;
+display:grid;
+grid-template-columns:1.2fr 1fr;
+gap:2rem;
+align-items:center;
+}
+
+
+.top3-grid{
+max-width:var(--max);
+margin:auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:2rem;
+}
+
+
+.top3-item{
+background:linear-gradient(135deg,#BEE0FE,#FFC8DC,#CDB4DA);;
+padding:1rem;
+border-radius:18px;
+box-shadow:0 8px 20px rgba(0,0,0,.1);
+transition:.3s;
+cursor:pointer;
+text-align: center;
+}
+.top3-item:hover{
+  transform: translateY(-5px);
+  background: linear-gradient(135deg, #BEE0FE, #FFC8DC, #CDB4DA);
+  filter: brightness(1.05);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+
+.preview, ul, table, form{
+max-width:var(--max);
+margin:1rem auto;
+}
+
+blockquote {
+    clear: both;            
+    max-width: 850px;
+    margin: 40px auto !important;
+    padding: 30px 60px !important;
+    background: rgba(255, 255, 255, 0.4); 
+    border-left: 10px solid var(--pink);   
+    border-radius: 0 25px 25px 0;
+    font-style: italic;
+    font-size: 1.5rem;
+    color: #5a3e44;
+}
+
+
+/* Dark Mode Support for Blockquote */
+body.dark-mode blockquote {
+    background: rgba(0, 0, 0, 0.3);
+    color: #ffcae0;
+}
+
+
+/* FORMS */
+form{
+background:#fff;
+padding:2rem;
+border-radius:18px;
+box-shadow:0 10px 20px rgba(0,0,0,.1);
+display:grid;
+gap:.8rem;
+}
+input,textarea{padding:.6rem;border-radius:8px;border:1px solid #ccc;}
+button{padding:.7rem;background:var(--pink);border:none;border-radius:8px;font-weight:bold;}
+
+
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:999;}
+.modal.active{display:flex;}
+.modal-content{background:#fff;padding:2rem;border-radius:16px;max-width:600px;position:relative;}
+.close-btn{position:absolute;right:15px;top:10px;font-size:22px;cursor:pointer;}
+
+
+footer{
+  margin-top:auto;
+  text-align:center;
+  padding:2rem;
+  background:linear-gradient(135deg,#BEE0FE,#FFC8DC,#CDB4DA);
+}
+
+.hero-slider img{
+  width:100%;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(0px);}
+  50%{transform:translateY(-12px);}
+  100%{transform:translateY(0px);}
+}
+
+.bl-highlights-centered {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* This centers the bottom 2 items */
+  gap: 1.5rem;
+}
+
+.bl-highlights-centered li {
+  /* This ensures 3 items per row (33% minus gap) */
+  flex: 0 1 calc(33.333% - 1.5rem); 
+  min-width: 280px; /* Prevents them from getting too skinny */
+}
+
+.highlight-card {
+  padding: 1.5rem;
+  border-radius: 18px;
+  background:linear-gradient(135deg,#BEE0FE,#FFC8DC,#CDB4DA);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  transition: 0.3s ease;
+  height: 100%;
+}
+
+.highlight-card:hover {
+  transform: translateY(-5px);
+  background: linear-gradient(135deg, #BEE0FE, #FFC8DC, #CDB4DA);
+  filter: brightness(1.05);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* Color Accents */
+.lavender-card { border-top: 5px solid var(--lavender); }
+.pink-card { border-top: 5px solid var(--pink); }
+.blue-card { border-top: 5px solid var(--blue); }
+
+/* Mobile View: 1 per row */
+@media (max-width: 768px) {
+  .bl-highlights-centered li {
+    flex: 0 1 100%;
+  }
+}
+
+/* --- 1. Layout Wrappers --- */
+.game-wrapper {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* Side-by-Side Selection Menu */
+.game-grid {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap; 
+}
+
+/* --- 2. Card & Zone Styling --- */
+/* Updated background to a soft pastel pink to match Top 3 style */
+.selection-card, .active-zone {
+    background-color: #fff0f3; /* Soft pastel pink */
+    border: 2px solid #ffb7c5; /* Pink border */
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(255, 183, 197, 0.3);
+    flex: 1;
+    min-width: 250px;
+    transition: 0.3s;
+}
+
+.selection-card:hover {
+    background-color: #ffe4e9; /* Slightly darker pink on hover */
+    box-shadow: 0 8px 15px rgba(255, 183, 197, 0.5);
+    transform: translateY(-5px);
+}
+
+/* Specific centering for the Active Zone when visible */
+#active-game-zone {
+    display: none; /* JavaScript changes this to flex */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fffafa; /* Very light pink/white for the inner play area */
+}
+
+/* --- 3. Buttons --- */
+.start-btn, .modal-btn {
+    background: #ffb7c5;
+    color: #5a3e44; /* Darker brown/grey text for better contrast on pink */
+    border: 1px solid #f08da3;
+    padding: 12px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: 0.2s;
+}
+
+.start-btn:hover, .modal-btn:hover {
+    background: #f08da3;
+    color: white;
+}
+
+/* Grid for Game Options */
+.options-layout {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.option-btn {
+    background: #ffffff; /* White buttons for clarity */
+    border: 2px solid #ffb7c5;
+    color: #5a3e44;
+    padding: 15px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.option-btn:hover {
+    background: #ffb7c5;
+    color: white;
+}
+
+/* --- 4. Gameplay UI Elements --- */
+#poster-display {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.small-poster {
+    width: 160px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border: 4px solid #ffffff; /* White border for the image to pop */
+    display: block;
+}
+
+.quote-text-bubble {
+    font-size: 1.15rem;
+    font-style: italic;
+    color: #5a3e44;
+    background: #ffffff; /* White bubble for contrast */
+    border-left: 6px solid #ffb7c5; /* Pink accent bar */
+    padding: 25px;
+    border-radius: 10px;
+    min-height: 60px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.score-text {
+    font-weight: bold;
+    color: #d63384;
+    margin-bottom: 15px;
+    font-size: 1.25rem;
+}
+
+/* --- 5. Navigation & Feedback --- */
+.exit-btn {
+    margin-top: 30px;
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0; top: 0;
+    width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background: #ffffff; 
+    margin: 15% auto; 
+    padding: 30px;
+    border-radius: 15px; 
+    width: 320px; 
+    text-align: center;
+    border: 5px solid #ffb7c5;
+}
+
+/* Specific layout for the About page sections */
+.content-flex {
+    display: flex;
+    align-items: center; /* Vertical center */
+    gap: 40px;           /* Space between text and image */
+    text-align: left;    /* Ensures text stays left-aligned */
+}
+
+.content-flex .text-content {
+    flex: 1;
+}
+
+.content-flex img {
+    flex: 0 0 300px;       /* Increased width */
+    height: 600px;         /* Increased height for vertical look */
+    object-fit: cover;     /* Prevents stretching */
+    border-radius: 20px;
+    border: 3px solid var(--pink);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+/* Reverse the second section */
+.reverse .content-flex {
+    flex-direction: row-reverse;
+}
+
+/* Mobile responsive: Stacks them on small screens */
+@media (max-width: 768px) {
+    .content-flex, .reverse .content-flex {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* 1. Reset the container to allow floating */
+.content-flex {
+    display: block !important; 
+}
+
+/* 2. Horizontal Image Wrap (Landscape) */
+.wrap-image {
+    float: right;            
+    width: 480px;           /* Horizontal width */
+    height: 320px;          /* Horizontal height */
+    margin: 10px 0 20px 30px; 
+    object-fit: cover;      
+    border-radius: 20px;
+    border: 3px solid var(--pink);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+/* 3. Reverse (Image on Left) */
+.reverse .wrap-image {
+    float: left;            
+    margin: 10px 30px 20px 0;
+}
+
+/* 4. Clearfix: Prevents sections from overlapping */
+.section-inner::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* SHATTER PIECES (Moved from index to style.css) */
+.shard {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+    z-index: 2500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: shard-fly 1.2s forwards cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+.logo-shard { width: 40px; height: 40px; }
+
+@keyframes shard-fly {
+    0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity: 0; }
+}
+
+/* TIC TAC TOE LAYOUT */
+.ttt-board { display: grid; grid-template-columns: repeat(3, 80px); gap: 10px; margin: 20px auto; }
+.cell { width: 80px; height: 80px; background: #fff; border: 2px solid #ffb7c5; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.cell.x { background-image: url('assets/logo.png'); background-size: 50px; background-repeat: no-repeat; background-position: center; }
+.cell.o::before { content: "🌈"; font-size: 2rem; }
+
+/* Container for the game selection */
+.selection-container {
+    max-width: 1300px;
+    margin: 50px auto;
+    padding: 0 20px;
+    text-align: center; /* Keeps the title centered at the top */
+}
+
+.selection-title {
+    color: #d63384;
+    font-size: 2.2rem;
+    margin-bottom: 40px;
+    width: 100%; /* Ensures title stays at the top, not the side */
+}
+
+/* The Grid Fix: 4 columns in one row */
+.top4-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 25px;
+}
+
+/* Individual Card Styling */
+.top4-item {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #ffb7c5;
+    display: flex;
+    flex-direction: column;
+    min-height: 500px; /* Ensures all cards are the same height */
+}
+
+.top4-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(255, 183, 197, 0.4);
+    background:linear-gradient(135deg,#BEE0FE,#FFC8DC,#CDB4DA);
+}
+
+/* Fixed Image Sizing */
+.poster-frame {
+    width: 100%;
+    height: 380px; /* Taller images as requested */
+    overflow: hidden;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.poster-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Tic Tac Toe specific card logo */
+.ttt-bg { background: linear-gradient(135deg, #fff0f3, #ffe3e8); }
+.ttt-icon {
+    width: 100px !important;
+    height: auto !important;
+    object-fit: contain !important;
+}
+
+/* Responsive: 2x2 on Tablets, 1x1 on Phones */
+@media (max-width: 1024px) {
+    .top4-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+    .top4-grid { grid-template-columns: 1fr; }
+}
+
+/* --- CONTACT PAGE SPECIFIC FIXES --- */
+
+/* Centers and constrains the width so it's not "too much" */
+.contact-layout {
+    max-width: 800px; /* Constrains the width for readability */
+    margin: 0 auto 40px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Form refinement */
+.contact-form {
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 20px;
+    border: 2px solid var(--pink);
+}
+
+/* Table refinement */
+.table-container {
+    overflow-x: auto;
+}
+
+.resource-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.resource-table th {
+    background: var(--pink);
+    color: #fff;
+    padding: 12px;
+    text-align: left;
+}
+
+.resource-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Resource Icon alignment */
+.resource-icon {
+    display: block;
+    margin: 0 auto 15px auto;
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.site-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #d63384;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.site-link:hover {
+    text-decoration: underline;
+}
+
+
+/* --- MAP STYLING --- */
+
+.map-container {
+    max-width: 1000px; /* Matches the width of your form and table */
+    margin: 0 auto;
+    border-radius: 20px;
+    overflow: hidden; /* Clips the iframe corners to the border-radius */
+    border: 5px solid #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.map-container iframe {
+    display: block;
+    width: 100%;
+}
+
+/* --- GOOGLE FORMS STYLE BANNER --- */
+
+.google-form-wrapper {
+    max-width: 800px; /* Consistent with your Contacts page */
+    margin: 0 auto 50px auto;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden; /* Clips the banner image to the container corners */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border: 2px solid var(--pink);
+}
+
+.form-banner {
+    width: 100%;
+    height: 200px; /* Adjust height as needed */
+    overflow: hidden;
+}
+
+.form-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the decorative image fills the banner area */
+    border-radius: 0; /* Remove image-specific radius to sit flush */
+}
+
+.registration-form {
+    padding: 2.5rem;
+    display: grid;
+    gap: 0.8rem;
+}
+
+.form-intro {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Custom Select styling to match inputs */
+select {
+    padding: .6rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-family: inherit;
+}
+
+/* --- 1. SMOOTH TRANSITION (Unified) --- */
+/* This single rule covers all elements for a lag-free experience */
+body, header, footer, main, section, div, form, input, textarea, select, 
+h2, h3, p, label, .top3-item, .modal-content, .selection-container {
+    transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease !important;
+}
+
+/* --- 2. THEME TOGGLE (Right-Aligned) --- */
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Pushes links and toggle to the right */
+    gap: 20px;
+    width: 100%;
+}
+
+/* --- THEME TOGGLE CLEANUP --- */
+.theme-toggle {
+    cursor: pointer;
+    font-size: 1.4rem;
+    order: 2; 
+    
+    /* REMOVE background and padding to get rid of the "shield" */
+    background: none !important; 
+    padding: 0 !important;
+    border-radius: 0;
+    
+    /* Optional: Ensure it has no shadow by default */
+    box-shadow: none !important;
+    
+    transition: transform 0.2s ease;
+}
+
+/* Ensure no shield appears on hover */
+.theme-toggle:hover { 
+    transform: rotate(15deg) scale(1.1);
+    background: none !important; 
+    box-shadow: none !important;
+}
+
+/* --- 3. DARK MODE OVERRIDES --- */
+body.dark-mode {
+    --lavender: #3d2b45; 
+    --pink: #703d4a;     
+    --blue: #1b262c;     
+    --text: #e0e0e0;     
+    background: #121212 !important; /* Solid color for better performance */
+}
+
+/* Card & Container Readability */
+body.dark-mode .top3-item {
+    background: linear-gradient(135deg, #2c3e50, #4a2b35, #2c3e50) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .top3-item h3, 
+body.dark-mode .selection-container h2 {
+    color: #ffafcc !important; /* High contrast pink for titles */
+}
+
+body.dark-mode .top3-item p, 
+body.dark-mode label {
+    color: #e0e0e0 !important;
+}
+
+/* Footer Readability */
+body.dark-mode footer {
+    background: #1a1a1a !important;
+    border-top: 1px solid #333;
+}
+
+body.dark-mode footer p { color: #ffafcc !important; font-weight: 500; }
+body.dark-mode footer p:last-child { color: #888 !important; }
+
+/* --- HOME PAGE: KEY HIGHLIGHTS DARK MODE --- */
+body.dark-mode .highlight-card {
+    background: linear-gradient(135deg, #2c3e50, #4a2b35, #2c3e50) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e8e8e8 !important; /* Soft white for body text */
+}
+
+body.dark-mode .highlight-card h3 {
+    color: #ffafcc !important; /* Brighter pink for headers */
+}
+
+/* --- FORMS: CONTACTS & REGISTRATION --- */
+body.dark-mode .google-form-wrapper,
+body.dark-mode .contact-form {
+    background: #242424 !important; /* Deep charcoal background */
+    border-color: #703d4a !important; /* Dark pink border */
+}
+
+body.dark-mode label, 
+body.dark-mode .form-intro p {
+    color: #ffcae0 !important; /* Light pink for labels */
+}
+
+body.dark-mode input, 
+body.dark-mode textarea, 
+body.dark-mode select {
+    background: #1a1a1a !important;
+    color: #ffffff !important;
+    border: 1px solid #444 !important;
+}
+
+/* --- CONTACTS: RESOURCES TABLE --- */
+body.dark-mode .resource-table {
+    background: #1a1a1a !important;
+    color: #e8e8e8 !important;
+}
+
+body.dark-mode .resource-table th {
+    background: #703d4a !important; /* Dark pink header */
+    color: #ffffff !important;
+}
+
+body.dark-mode .resource-table td {
+    border-bottom: 1px solid #333 !important;
+}
+
+/* --- GAME CONTAINER DARK MODE --- */
+body.dark-mode .game-container-box, 
+body.dark-mode .active-zone {
+    background: #1e1e1e !important; /* Darker than the page background */
+    border: 2px solid #703d4a !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode #ttt-status, 
+body.dark-mode .score-text {
+    color: #ffafcc !important; /* Bright pink status text */
+}
+
+body.dark-mode .cell {
+    background: #2d2d2d !important;
+    border-color: #444 !important;
+}
+
+/* --- TIC TAC TOE LOGO FIX (FOR DARK MODE) --- */
+
+/* Ensure the cell background stays light ONLY for the Logo team */
+body.dark-mode .cell.x { 
+    background-color: #ffffff !important; 
+    background-image: url('assets/logo.png') !important;
+    background-size: 70px !important; 
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.1); /* Adds depth to white cell */
+}
+
+/* Maintain the Rainbow team visibility on dark cells */
+body.dark-mode .cell.o {
+    background-color: #2d2d2d !important;
+}
+
+/* --- REGISTRATION FORM READABILITY --- */
+
+body.dark-mode .registration-form {
+    background: #1e1e1e !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .registration-form label {
+    color: #ffcae0 !important; /* Soft light pink for labels */
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+body.dark-mode .registration-form input,
+body.dark-mode .registration-form select {
+    background: #2d2d2d !important;
+    color: #ffffff !important;
+    border: 1px solid #444 !important;
+}
+
+/* Form description/intro text */
+body.dark-mode .form-intro p {
+    color: #bbb !important;
+    border-bottom: 1px solid #333;
+    padding-bottom: 15px;
+}
+
+/* --- DARK MODE: BUTTONS & MODALS --- */
+
+/* The Main White Box in Games */
+body.dark-mode .game-container-box, 
+body.dark-mode .active-zone {
+    background: #1e1e1e !important;
+    border: 2px solid #703d4a !important;
+    color: #ffffff !important;
+}
+
+/* Modals (Pop-ups) */
+body.dark-mode .modal-content {
+    background: #242424 !important;
+    border: 5px solid #703d4a !important; /* Darker pink border */
+    color: #ffffff !important;
+}
+
+body.dark-mode #modal-message {
+    color: #bbb !important; /* Muted text for the modal description */
+}
+
+/* Buttons inside Games and Modals */
+body.dark-mode .start-btn, 
+body.dark-mode .modal-btn,
+body.dark-mode .option-btn {
+    background: #703d4a !important; /* Deep rose background */
+    color: #ffffff !important;
+    border: 1px solid #f08da3 !important;
+}
+
+body.dark-mode .start-btn:hover, 
+body.dark-mode .modal-btn:hover,
+body.dark-mode .option-btn:hover {
+    background: #f08da3 !important; /* Bright pink on hover */
+    box-shadow: 0 0 15px rgba(240, 141, 163, 0.4);
+}
+
+/* Exit Button (Underline Link) */
+body.dark-mode .exit-btn {
+    color: #aaa !important;
+}
+
+/* Ensure the Rainbow emoji is large and bright in dark mode */
+body.dark-mode .cell.o::before {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+}
+
+/* Status text (e.g., "Your Turn!") */
+body.dark-mode #ttt-status {
+    color: #ffafcc !important;
+    text-shadow: 0 0 10px rgba(255, 175, 204, 0.3);
+}
+
+/* --- TIC TAC TOE LOGO FIX --- */
+body.dark-mode .cell.x { 
+    background-color: #ffffff !important; /* Keeps white background for the PNG */
+    background-image: url('assets/logo.png') !important;
+    
+    /* These three lines stop the "laggy" tiling and center the logo */
+    background-repeat: no-repeat !important; 
+    background-position: center !important;  
+    background-size: 80% !important; /* Adjust this to make the logo bigger or smaller */
+    
+    border: 2px solid #ffafcc !important; /* Pink border to match your theme */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); 
+}
+
+/* --- UNIFIED TRANSPARENT LOGO FIX --- */
+
+/* This rule applies to both light and dark modes */
+.cell.x { 
+    background-color: transparent !important; /* Removes the white box */
+    background-image: url('assets/logo.png') !important;
+    background-repeat: no-repeat !important;  /* Prevents the tiled pattern */
+    background-position: center !important;   /* Centers the logo */
+    background-size: 80% !important;          /* Matches the rainbow scale */
+    border: 2px solid #ffafcc;               /* Optional: keep the border for structure */
+}
+
+/* Ensure Dark Mode doesn't force a background */
+body.dark-mode .cell.x {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* --- DUO MATCH GRID & POSTERS --- */
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 100px); /* 4 Columns for 16 cards */
+    gap: 15px;
+    justify-content: center;
+}
+
+.memory-card {
+    width: 100px;
+    height: 140px; /* Poster aspect ratio */
+    background: #BEE0FE; /* Fallback light blue */
+    border: 2px solid #FFAFCC;
+    border-radius: 12px;
+    cursor: pointer;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease;
+}
+
+.memory-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Prevents stretching */
+    border-radius: 10px;
+    display: none; /* Hidden until flipped */
+}
+
+/* Flip Logic */
+.memory-card.flipped {
+    transform: rotateY(180deg);
+    background: #fff;
+}
+
+.memory-card.flipped img {
+    display: block;
+}
+
+/* Dark Mode Support */
+body.dark-mode .memory-card {
+    background: #2d2d2d !important;
+    border-color: #703d4a !important;
+}
+
+
+/* --- GAMES PYRAMID LAYOUT FIX --- */
+.selection-container {
+    max-width: 1000px; /* Reduced from 1200px/1600px to make it more compact */
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.game-pyramid-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); 
+    gap: 1.5rem; /* Reduced gap slightly */
+}
+
+/* Row 1: 3 Items */
+.game-pyramid-grid .game-card:nth-child(-n+3) {
+    grid-column: span 2;
+}
+
+/* Row 2: 2 Items centered */
+.game-pyramid-grid .game-card:nth-child(n+4) {
+    grid-column: span 3;
+    max-width: 400px; /* Reduced from 500px to make bottom cards smaller */
+    justify-self: center;
+    width: 100%;
+}
+
+.game-card {
+    background: linear-gradient(135deg, #BEE0FE, #FFC8DC, #CDB4DA);
+    padding: 1rem; 
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.1);
+    transition: .3s ease;
+    cursor: pointer;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    filter: brightness(1.05);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+/* IMAGE SIZE FIX */
+.poster-frame {
+    width: 100%;
+    height: 180px; /* Reduced height to make the cards much smaller */
+    overflow: hidden;
+    border-radius: 14px;
+    margin-bottom: 0.8rem;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.poster-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.game-card h3 {
+    font-size: 1.1rem; /* Smaller titles */
+    margin-bottom: 5px;
+}
+
+.game-card p {
+    font-size: 0.85rem; /* Smaller description */
+    color: #555;
+}
+
+
+/* --- Splash Animation --- */
+.show-splash {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #BEE0FE, #FFC8DC, #CDB4DA);
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+.shard {
+    animation: scatter 1.5s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes scatter {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(var(--r));
+        opacity: 0;
+    }
+}
+
+.loader-container.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+}
+
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Specific layout for Profile Page Columns */
+.profile-flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: stretch; /* Ensures both cards are the same height */
+}
+
+.profile-card {
+    flex: 1;
+    min-width: 350px;
+    display: flex;
+    flex-direction: column; /* Allows us to push button to bottom */
+}
+
+/* Fixes the "Security" inputs overlapping */
+.password-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Side by side on desktop */
+    gap: 15px;
+    margin-bottom: 1rem;
+}
+
+/* Ensure buttons are consistent pink and full width */
+.profile-card button {
+    margin-top: auto; /* Pushes button to bottom */
+    width: 100%;
+    background: var(--pink);
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.profile-card button:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+/* Specific styling for the black "Update Password" button if you want to keep it dark */
+.btn-dark {
+    background: #333 !important;
+}
+
+/* Mobile responsive for the password grid */
+@media (max-width: 600px) {
+    .password-group {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Fix for the Profile Page Grid Spacing */
+.profile-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Force inputs to stack properly so they don't overlap */
+.registration-form div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+
+/* Unify Button Colors to your --pink variable */
+.btn-primary {
+  background: var(--pink) !important;
+  color: #fff !important;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.05);
+  transform: translateY(-2px);
+}
