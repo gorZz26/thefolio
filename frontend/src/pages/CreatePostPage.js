@@ -155,16 +155,4 @@ const CreatePostPage = () => {
   );
 };
 
-/**
- * Entry point for the preview environment.
- * Wraps the CreatePostPage in a HashRouter to prevent context errors.
- */
-export default function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="*" element={<CreatePostPage />} />
-      </Routes>
-    </Router>
-  );
-}
+export default CreatePostPage;

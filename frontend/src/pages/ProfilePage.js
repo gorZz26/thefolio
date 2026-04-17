@@ -286,12 +286,4 @@ const ProfilePage = () => {
   );
 };
 
-export default function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="*" element={<ProfilePage />} />
-      </Routes>
-    </Router>
-  );
-}
+export default ProfilePage;
