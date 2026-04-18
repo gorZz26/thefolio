@@ -1,16 +1,20 @@
-// backend/routes/auth.routes.js
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { protect } = require('../middleware/auth.middleware');
-const upload = require('../middleware/upload');
 
 const router = express.Router();
 
-// Helper function — generates a JWT token that expires in 7 days
+/**
+ * Helper function — generates a JWT token that expires in 7 days
+ * Uses the secret key stored in your .env file.
+ */
 const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-// ── POST /api/auth/register ───────────────────────────────────
+/**
+ * @route   POST /api/auth/register
+ * @desc    Register a new user
+ */
 router.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -27,7 +31,10 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// ── POST /api/auth/login ──────────────────────────────────────
+/**
+ * @route   POST /api/auth/login
+ * @desc    Authenticate user and get token
+ */
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -43,28 +50,48 @@ router.post('/login', async (req, res) => {
     
     res.json({
       token: generateToken(user._id),
-      user: { _id: user._id, name: user.name, email: user.email, role: user.role, profilePic: user.profilePic }
+      user: { 
+        _id: user._id, 
+        name: user.name, 
+        email: user.email, 
+        role: user.role, 
+        profilePic: user.profilePic 
+      }
     });
   } catch (err) { 
     res.status(500).json({ message: err.message }); 
   }
 });
 
-// ── GET /api/auth/me ──────────────────────────────────────────
-// Returns the currently logged-in user's data (requires token)
+/**
+ * @route   GET /api/auth/me
+ * @desc    Get current user profile
+ */
 router.get('/me', protect, async (req, res) => {
   const user = await User.findById(req.user._id).select('-password');
   res.json(user);
 });
 
-// ── PUT /api/auth/profile ─────────────────────────────────────
-// Update name, bio, or upload a new profile picture
-router.put('/profile', protect, upload.single('profilePic'), async (req, res) => {
+/**
+ * @route   PUT /api/auth/profile
+ * @desc    Update profile (Handles Base64 strings for profile pictures)
+ */
+router.put('/profile', protect, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    if (req.body.name) user.name = req.body.name;
-    if (req.body.bio) user.bio = req.body.bio;
-    if (req.file) user.profilePic = req.file.filename;
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const { name, bio, profilePic } = req.body;
+
+    // Update basic fields
+    if (name) user.name = name;
+    if (bio) user.bio = bio;
+    
+    // UPDATED: image is now a Base64 string sent in the JSON body
+    // We no longer use req.file.filename
+    if (profilePic) {
+      user.profilePic = profilePic;
+    }
     
     await user.save();
     const updated = await User.findById(user._id).select('-password');
@@ -74,7 +101,10 @@ router.put('/profile', protect, upload.single('profilePic'), async (req, res) =>
   }
 });
 
-// ── PUT /api/auth/change-password ────────────────────────────
+/**
+ * @route   PUT /api/auth/change-password
+ * @desc    Change user password
+ */
 router.put('/change-password', protect, async (req, res) => {
   const { currentPassword, newPassword } = req.body;
   try {
