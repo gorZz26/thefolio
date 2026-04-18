@@ -1,63 +1,39 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import API from '../api/axios';
 
-const CreatePost = () => {
+const CreatePostPage = () => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const [image, setImage] = useState(''); // Stores the Base64 text string
-  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [error, setError] = useState('');
   
   const navigate = useNavigate();
 
-  // The Magic Part: Converts the file to a Base64 string
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 2000000) { // 2MB limit check
-        setError('File is too large. Please select an image under 2MB.');
-        return;
-      }
-      
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setImage(reader.result); // This is the Base64 string
-        setError('');
-      };
-      reader.onerror = () => {
-        setError('Failed to read image file.');
-      };
-    }
-  };
+  // Image Preview Logic
+  useEffect(() => {
+    if (!image) { setPreview(null); return; }
+    const objectUrl = URL.createObjectURL(image);
+    setPreview(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [image]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+    
+    const fd = new FormData();
+    fd.append('title', title);
+    fd.append('body', body);
+    if (image) fd.append('image', image);
 
     try {
-      const token = localStorage.getItem('token');
-      // We send a regular JSON object, not FormData
-      const postData = { title, body, image };
-
-      const { data } = await axios.post('https://thefolio-ojmc.onrender.com/api/posts', postData, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      navigate(`/posts/${data._id}`); // Go to the post detail page
+      const { data } = await API.post('/posts', fd);
+      navigate(`/posts/${data._id}`);
     } catch (err) {
-      if (err.response?.status === 413) {
-        setError('Image data is too large for the server. Try a smaller file.');
-      } else {
-        setError(err.response?.data?.message || 'Failed to publish post');
-      }
-    } finally {
-      setLoading(false);
+      setError(err.response?.data?.message || 'Failed to publish post');
     }
   };
 
@@ -88,7 +64,7 @@ const CreatePost = () => {
         <div className="google-form-wrapper" style={{ maxWidth: '900px', margin: '0 auto', padding: '40px', background: '#fff' }}>
           
           {error && (
-            <p style={{ color: 'red', textAlign: 'center', background: '#ffe6e6', padding: '10px', borderRadius: '5px', marginBottom: '20px' }}>
+            <p style={{ color: 'red', textAlign: 'center', background: '#ffe6e6', padding: '10px', borderRadius: '5px' }}>
               {error}
             </p>
           )}
@@ -110,12 +86,13 @@ const CreatePost = () => {
               <textarea 
                 value={body} 
                 onChange={e => setBody(e.target.value)}
-                placeholder='Share your thoughts...' 
+                placeholder='Share your thoughts with the community...' 
                 rows={12} 
                 required 
               />
             </div>
 
+            {/* IMAGE UPLOAD SECTION - Now visible to everyone */}
             <div style={{ 
               marginBottom: '25px', 
               padding: '20px', 
@@ -124,33 +101,28 @@ const CreatePost = () => {
               border: '1px dashed #d63384' 
             }}>
               <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '10px' }}>
-                Add Cover Image (Saved Permanently)
+                Add Cover Image
               </label>
               <input 
                 type='file' 
                 accept='image/*' 
-                onChange={handleImageChange} 
-                style={{ border: 'none', padding: '0', width: '100%' }}
+                onChange={e => setImage(e.target.files[0])} 
+                style={{ border: 'none', padding: '0' }}
               />
               
-              {image && (
+              {preview && (
                 <div style={{ marginTop: '15px' }}>
                   <img 
-                    src={image} 
+                    src={preview} 
                     alt="Preview" 
-                    style={{ width: '100%', maxHeight: '400px', objectFit: 'cover', borderRadius: '8px' }} 
+                    style={{ width: '100%', maxHeight: '300px', objectFit: 'cover', borderRadius: '8px' }} 
                   />
                 </div>
               )}
             </div>
 
-            <button 
-              type='submit' 
-              className="btn-primary" 
-              disabled={loading}
-              style={{ fontSize: '1.1rem', padding: '15px', width: '100%', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}
-            >
-              {loading ? 'Publishing...' : 'Publish Post'}
+            <button type='submit' className="btn-primary" style={{ fontSize: '1.1rem', padding: '15px', width: '100%' }}>
+              Publish Post
             </button>
           </form>
         </div>
@@ -159,4 +131,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default CreatePostPage;

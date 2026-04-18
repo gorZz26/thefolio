@@ -1,3 +1,4 @@
+// backend/server.js
 require('dotenv').config(); // Load .env variables FIRST
 const express = require('express');
 const cors = require('cors');
@@ -20,20 +21,15 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'http://localhost:3001',
-    'https://thefolio-rho.vercel.app' 
+    'https://thefolio-rho.vercel.app' // Removed trailing slash to match browser origin exactly
   ],
   credentials: true,
 }));
 
-/**
- * CRITICAL UPDATE: 
- * We set a 10MB limit to allow Base64 image strings to be sent in the JSON body.
- * Without these limits, your server will reject images for being too large.
- */
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ limit: '10mb', extended: true }));
+// Parse incoming JSON request bodies
+app.use(express.json());
 
-// Serve uploaded image files (Keep for legacy support of old posts)
+// Serve uploaded image files as public URLs
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ── Routes ────────────────────────────────────────────────────

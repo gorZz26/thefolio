@@ -1,13 +1,11 @@
 const express = require('express');
+const Post = require('../models/Post');
+const { protect } = require('../middleware/auth.middleware');
+const { memberOrAdmin } = require('../middleware/role.middleware');
+const upload = require('../middleware/upload');
 const router = express.Router();
-const Post = require('../models/Post'); // Adjust path if your model is elsewhere
-const { protect } = require('../middleware/auth.middleware'); // Adjust path
-const { memberOrAdmin } = require('../middleware/role.middleware'); // Adjust path
 
-/**
- * @route   GET /api/posts
- * @desc    Get all posts
- */
+// GET all posts
 router.get('/', async (req, res) => {
   try {
     const posts = await Post.find({ status: 'published' })
@@ -19,54 +17,70 @@ router.get('/', async (req, res) => {
   }
 });
 
-/**
- * @route   POST /api/posts
- * @desc    Create a post (Handles Base64 strings)
- */
-router.post('/', protect, memberOrAdmin, async (req, res) => {
+// GET single post
+router.get('/:id', async (req, res) => {
   try {
-    const { title, body, image } = req.body; 
-
-    // We don't use Multer here anymore. 
-    // 'image' is just the long text string from req.body
-    const newPost = new Post({
-      title,
-      body,
-      image, // This is the Base64 string saved directly to MongoDB
-      author: req.user._id,
-      status: 'published'
-    });
-
-    const savedPost = await newPost.save();
-    await savedPost.populate('author', 'name profilePic');
-    res.status(201).json(savedPost);
+    const post = await Post.findById(req.params.id).populate('author', 'name profilePic');
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+    res.json(post);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-/**
- * @route   PUT /api/posts/:id
- * @desc    Update a post (Handles new Base64 strings)
- */
-router.put('/:id', protect, memberOrAdmin, async (req, res) => {
+// LIKE / UNLIKE Post
+router.put('/:id/like', protect, memberOrAdmin, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).json({ message: 'Post not found' });
 
-    // Check if user is author or admin
-    if (post.author.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Unauthorized' });
+    const index = post.likes.indexOf(req.user._id);
+    if (index === -1) {
+      post.likes.push(req.user._id); // Like
+    } else {
+      post.likes.splice(index, 1); // Unlike
     }
 
-    const { title, body, image } = req.body;
-    
+    await post.save();
+    await post.populate('author', 'name profilePic');
+    res.json(post);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// CREATE Post
+router.post('/', protect, memberOrAdmin, upload.single('image'), async (req, res) => {
+  try {
+    const { title, body } = req.body;
+    const image = req.file ? req.file.filename : '';
+    const post = await Post.create({ title, body, image, author: req.user._id });
+    await post.populate('author', 'name profilePic');
+    res.status(201).json(post);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// UPDATE Post (Edit)
+router.put('/:id', protect, memberOrAdmin, upload.single('image'), async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    // Check if the user is the author or an admin
+    if (post.author.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Unauthorized to edit this post' });
+    }
+
+    const { title, body, status } = req.body;
     post.title = title || post.title;
     post.body = body || post.body;
+    post.status = status || post.status;
     
-    // If a new Base64 image is sent, update it
-    if (image) {
-      post.image = image;
+    // If a new image is uploaded, update it
+    if (req.file) {
+      post.image = req.file.filename;
     }
 
     const updatedPost = await post.save();
@@ -77,20 +91,19 @@ router.put('/:id', protect, memberOrAdmin, async (req, res) => {
   }
 });
 
-/**
- * @route   DELETE /api/posts/:id
- */
+// DELETE Post
 router.delete('/:id', protect, memberOrAdmin, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).json({ message: 'Post not found' });
 
+    // Check permissions
     if (post.author.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Unauthorized' });
+      return res.status(403).json({ message: 'Unauthorized to delete this post' });
     }
 
     await post.deleteOne();
-    res.json({ message: 'Post removed successfully' });
+    res.json({ message: 'Post removed' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
