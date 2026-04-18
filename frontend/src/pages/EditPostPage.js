@@ -14,6 +14,19 @@ const EditPostPage = () => {
   const [error, setError] = useState('');
   const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
+  // Helper function to handle image URLs
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return "https://via.placeholder.com/800x400?text=No+Image";
+    
+    // If the image is a full Cloudinary link, use it directly
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    
+    // Otherwise, it's an old post, use the local uploads folder
+    return `${backendUrl}/uploads/${imagePath}`;
+  };
+
   // 1. Fetch the existing post data to pre-fill the form
   useEffect(() => {
     const fetchPost = async () => {
@@ -21,7 +34,7 @@ const EditPostPage = () => {
         const { data } = await API.get(`/posts/${id}`);
         setTitle(data.title);
         setBody(data.body);
-        if (data.image) setPreview(`${backendUrl}/uploads/${data.image}`);
+        if (data.image) setPreview(getImageUrl(data.image));
       } catch (err) {
         setError('Failed to load post data.');
       } finally {

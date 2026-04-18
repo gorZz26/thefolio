@@ -13,6 +13,19 @@ const ProfilePage = () => {
   const [newPw, setNewPw] = useState('');
   const [msg, setMsg] = useState('');
   const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
+
+  // Helper function to handle image URLs
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return '/default-avatar.png';
+    
+    // If the image is a full Cloudinary link, use it directly
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    
+    // Otherwise, use the local uploads folder
+    return `${backendUrl}/uploads/${imagePath}`;
+  };
   
   // NEW: State for user's posts
   const [myPosts, setMyPosts] = useState([]);
@@ -68,9 +81,7 @@ const ProfilePage = () => {
     }
   };
 
-  const picSrc = user?.profilePic
-    ? `${backendUrl}/uploads/${user.profilePic}`
-    : '/default-avatar.png';
+  const picSrc = getImageUrl(user?.profilePic);
 
   return (
     <main>

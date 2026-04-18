@@ -21,6 +21,19 @@ function HomePage() {
   const [showAll, setShowAll] = useState(false);
   const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
+  // Helper function to handle image URLs
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return "https://via.placeholder.com/800x400?text=No+Image";
+    
+    // If the image is a full Cloudinary link, use it directly
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    
+    // Otherwise, it's an old post, use the local uploads folder
+    return `${backendUrl}/uploads/${imagePath}`;
+  };
+
   // 1. Hero Slider Logic
   useEffect(() => {
     const interval = setInterval(() => {
@@ -99,7 +112,7 @@ function HomePage() {
                     <div style={{ height: '190px', overflow: 'hidden' }}>
                       {post.image ? (
                         <img
-                          src={`${backendUrl}/uploads/${post.image}`}
+                          src={getImageUrl(post.image)}
                           alt={post.title}
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
@@ -144,7 +157,7 @@ function HomePage() {
                     <div style={{ minWidth: '140px', height: '140px', borderRadius: '18px', overflow: 'hidden', background: '#fce4ec', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {post.image ? (
                         <img
-                          src={`${backendUrl}/uploads/${post.image}`}
+                          src={getImageUrl(post.image)}
                           alt={post.title}
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />

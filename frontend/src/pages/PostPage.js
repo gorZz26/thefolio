@@ -14,6 +14,19 @@ const PostPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
+  // Helper function to handle image URLs
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return "https://via.placeholder.com/800x400?text=No+Image";
+    
+    // If the image is a full Cloudinary link, use it directly
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    
+    // Otherwise, it's an old post, use the local uploads folder
+    return `${backendUrl}/uploads/${imagePath}`;
+  };
+
   // 1. Fetch Post and Comments on Load
   useEffect(() => {
     const fetchData = async () => {
@@ -91,7 +104,7 @@ const PostPage = () => {
           {/* Cover Image */}
           {post.image && (
             <img 
-              src={`${backendUrl}/uploads/${post.image}`} 
+              src={getImageUrl(post.image)} 
               alt="hero" 
               style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }} 
             />
