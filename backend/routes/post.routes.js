@@ -50,12 +50,21 @@ router.put('/:id/like', protect, memberOrAdmin, async (req, res) => {
 });
 
 // CREATE Post
-router.post('/', protect, memberOrAdmin, upload.single('image'), async (req, res) => {
+router.post('/', protect, upload.single('image'), async (req, res) => {
   try {
     const { title, body } = req.body;
-    const image = req.file ? req.file.filename : '';
-    const post = await Post.create({ title, body, image, author: req.user._id });
-    await post.populate('author', 'name profilePic');
+    
+    // IMPORTANT: Cloudinary returns the link in req.file.path
+    const imageUrl = req.file ? req.file.path : '';
+
+    const post = await Post.create({
+      title,
+      body,
+      image: imageUrl, // Storing the HTTPS link in MongoDB
+      author: req.user._id,
+      status: 'published'
+    });
+
     res.status(201).json(post);
   } catch (err) {
     res.status(500).json({ message: err.message });

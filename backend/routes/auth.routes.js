@@ -56,19 +56,21 @@ router.get('/me', protect, async (req, res) => {
   const user = await User.findById(req.user._id).select('-password');
   res.json(user);
 });
-
-// ── PUT /api/auth/profile ─────────────────────────────────────
-// Update name, bio, or upload a new profile picture
+// ── PUT /api/auth/profile ────────────────────────────────────
 router.put('/profile', protect, upload.single('profilePic'), async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
+    
     if (req.body.name) user.name = req.body.name;
     if (req.body.bio) user.bio = req.body.bio;
-    if (req.file) user.profilePic = req.file.filename;
     
+    if (req.file) {
+      // req.file.path is the permanent Cloudinary link
+      user.profilePic = req.file.path; 
+    }
+
     await user.save();
-    const updated = await User.findById(user._id).select('-password');
-    res.json(updated);
+    res.json(user);
   } catch (err) { 
     res.status(500).json({ message: err.message }); 
   }
